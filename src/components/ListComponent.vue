@@ -1,23 +1,24 @@
 <template>
-  <div>
-    <table class="list-group table mx-auto">
-      <tbody
-        v-bind:key="device.id"
-        v-for="device in devices"
-        class="list-group-item row mx-auto"
-      >
-        <thead>
+  <div class="list-group table bg-white">
+    <table class="mx-auto" v-if="devices.length > 0">
+      <thead>
+        <tr>
           <th>Device Id</th>
           <th>Device Serial Number</th>
           <th>Device Type</th>
-        </thead>
-        <tr>
+        </tr>
+      </thead>
+      <tbody class="list">
+        <tr v-for="device in devices" v-bind:key="device.id">
           <td>{{ device.device_id }}</td>
           <td>{{ device.device_serial_number }}</td>
           <td>{{ device.device_type }}</td>
         </tr>
       </tbody>
     </table>
+    <div class="alert alert-danger" role="alert" v-else>
+      No matching data
+    </div>
   </div>
 </template>
 
@@ -28,4 +29,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.list::-webkit-scrollbar {
+  display: none;
+}
+</style>

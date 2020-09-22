@@ -10,6 +10,8 @@
           v-model="device_input"
           v-on:update="searchChange"
           placeholder="Enter Device Serial Number ..."
+          @focus="display_flag = true"
+          v-on:blur="display_flag = false"
           aria-describedby="inputHelpText"
         ></b-form-input>
       </b-input-group>
@@ -20,6 +22,7 @@
       <ListComponent
         id="list_view"
         class="col-md-10"
+        v-if="display_flag"
         v-bind:devices="filtered"
       />
       <p class="text-left">
@@ -46,6 +49,7 @@ export default {
   },
   data() {
     return {
+      display_flag: false,
       device_input: '',
     };
   },
@@ -63,11 +67,14 @@ export default {
   max-width: 63%;
   text-align: center;
 }
+#list_view::-webkit-scrollbar {
+  display: none;
+}
 #list_view {
   z-index: 1;
   position: absolute;
   height: 70%;
-  overflow: hidden;
+  overflow: scroll;
 }
 #list_view {
   visibility: visible;

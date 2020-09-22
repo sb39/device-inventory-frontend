@@ -35,6 +35,7 @@ export default {
       .get('https://device-inventory.azurewebsites.net/devices')
       .then((response) => {
         this.devices = response.data;
+        this.filtered = response.data;
       })
       .catch((err) => console.log(err));
   },
