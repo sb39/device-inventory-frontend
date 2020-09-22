@@ -4,6 +4,8 @@
     <router-view
       v-on:new-device="addDevices"
       v-bind:devices="devices"
+      v-bind:filtered="filtered"
+      v-on:search-change="searchInput"
       v-on:edit-device="editDevice"
       v-on:del-device="deleteDevice"
     />
@@ -25,11 +27,7 @@ export default {
   data() {
     return {
       devices: [],
-    };
-  },
-  updated() {
-    return {
-      devices: this.devices.filter((e) => e.deleted).length,
+      filtered: [],
     };
   },
   created() {
@@ -89,6 +87,9 @@ export default {
           console.log(err);
           Vue.$vToastify.error('Device deletion Failed !');
         });
+    },
+    searchInput(input) {
+      this.filtered = this.devices.filter((item) => item.device_id === input);
     },
   },
 };
