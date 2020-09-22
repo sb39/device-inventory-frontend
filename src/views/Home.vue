@@ -9,7 +9,7 @@
           id="search_bar"
           v-model="device_input"
           v-on:update="searchChange"
-          placeholder="Enter Device Serial Number ..."
+          placeholder="Enter Device ID..."
           @focus="display_flag = true"
           v-on:blur="display_flag = false"
           aria-describedby="inputHelpText"
