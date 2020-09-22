@@ -3,8 +3,8 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import DeviceListing from '../views/DeviceListing.vue';
 import CreateDevice from '../views/CreateDevice.vue';
-import DeviceDetails from '../views/DeviceDetails.vue';
 import Authentication from '../views/Authentication.vue';
+import EditDevice from '../views/EditDevice.vue';
 
 Vue.use(VueRouter);
 
@@ -25,9 +25,9 @@ const routes = [
     component: CreateDevice,
   },
   {
-    path: '/device/details',
-    name: 'DeviceDetails',
-    component: DeviceDetails,
+    path: '/devices/edit',
+    name: 'EditDevice',
+    component: EditDevice,
   },
   {
     path: '/login',

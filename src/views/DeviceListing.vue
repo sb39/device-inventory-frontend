@@ -17,7 +17,6 @@
         <DevicesComponent
           class="devicesTable"
           v-bind:devices="devices"
-          v-on:edit-device="editDevice"
           v-on:del-device="deleteDevice"
         />
       </div>
@@ -35,9 +34,6 @@ export default {
     DevicesComponent,
   },
   methods: {
-    editDevice(id) {
-      this.$emit('edit-device', id);
-    },
     deleteDevice(id) {
       this.$emit('del-device', id);
     },

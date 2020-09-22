@@ -11,13 +11,15 @@
             <th>Assigned By</th>
             <th>Assignment Date</th>
             <th>Submission Date</th>
+            <th>Deleted</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody v-bind:key="device.uuid" v-for="device in devices">
           <IndDeviceComponent
+            v-if="device instanceof Object"
             v-bind:device="device"
-            v-on:edit-device="editDevice"
             v-on:del-device="deleteDevice"
           />
         </tbody>
@@ -37,9 +39,6 @@ export default {
     IndDeviceComponent,
   },
   methods: {
-    editDevice(id) {
-      this.$emit('edit-device', id);
-    },
     deleteDevice(id) {
       this.$emit('del-device', id);
     },

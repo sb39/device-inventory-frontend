@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Vue from 'vue';
 import Header from './components/layouts/Header';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -23,71 +24,71 @@ export default {
   },
   data() {
     return {
-      devices: [
-        {
-          uuid: 'as-546asdada-5',
-          device_id: 1,
-          serial_number: 'ABC1233',
-          device_type: 'mobile',
-          assigned_to: 'self',
-          assigned_by: 'self',
-          assigned_date: '09-09-2020',
-          submission_date: '09-09-2020',
-        },
-        {
-          uuid: 'as-546asdada-4',
-          device_id: 2,
-          serial_number: 'ABC1233',
-          device_type: 'mobile',
-          assigned_to: 'self',
-          assigned_by: 'self',
-          assigned_date: '09-09-2020',
-          submission_date: '09-09-2020',
-        },
-        {
-          uuid: 'as-546asdada-3',
-          device_id: 3,
-          serial_number: 'ABC1233',
-          device_type: 'mobile',
-          assigned_to: 'self',
-          assigned_by: 'self',
-          assigned_date: '09-09-2020',
-          submission_date: '09-09-2020',
-        },
-        {
-          uuid: 'as-546asdada-2',
-          device_id: 4,
-          serial_number: 'ABC1233',
-          device_type: 'mobile',
-          assigned_to: 'self',
-          assigned_by: 'self',
-          assigned_date: '09-09-2020',
-          submission_date: '09-09-2020',
-        },
-        {
-          uuid: 'as-546asdada-1',
-          device_id: 5,
-          serial_number: 'ABC1233',
-          device_type: 'mobile',
-          assigned_to: 'self',
-          assigned_by: 'self',
-          assigned_date: '09-09-2020',
-          submission_date: '09-09-2020',
-        },
-      ],
+      devices: [],
     };
+  },
+  updated() {
+    return {
+      devices: this.devices.filter((e) => e.deleted).length,
+    };
+  },
+  created() {
+    axios
+      .get('http://localhost:3002/devices')
+      .then((response) => {
+        this.devices = response.data;
+      })
+      .catch((err) => console.log(err));
   },
   methods: {
     addDevices(obj) {
       Vue.$vToastify.success('Device has been added !');
-      this.devices.push(obj);
+      axios
+        .post('http://localhost:3002/devices', obj)
+        .then((response) => {
+          this.devices.push(response.data);
+          this.$forceUpdate();
+        })
+        .catch((err) => {
+          Vue.$vToastify.error('Device creation Failed !');
+          console.log(err);
+        });
     },
-    editDevice(id) {
-      console.log(id);
+    editDevice(obj) {
+      this.devices = this.devices.map((e) => {
+        if (e.id === obj.id) {
+          e = obj;
+        }
+        return e;
+      });
+      axios
+        .patch(`http://localhost:3002/devices/${obj.id}`, obj)
+        .then(() => {
+          this.devices.filter((e) => e.id === obj.id)[0] = obj;
+          Vue.$vToastify.success('Device has been updated !');
+          this.$forceUpdate();
+        })
+        .catch((err) => {
+          Vue.$vToastify.error('Device updation Failed !');
+          console.log(err);
+        });
     },
     deleteDevice(id) {
-      Vue.$vToastify.success('Device has been deleted !');
-      this.devices = this.devices.filter((e) => e.uuid !== id);
+      this.devices = this.devices.map((e) => {
+        if (e.id === id) {
+          e.deleted = 1;
+        }
+        return e;
+      });
+      axios
+        .delete(`http://localhost:3002/devices/${id}`)
+        .then(() => {
+          Vue.$vToastify.success('Device has been deleted !');
+        })
+        .catch((err) => {
+          console.log(err);
+          Vue.$vToastify.error('Device deletion Failed !');
+        });
     },
   },
 };

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <b-card title="Create Devices" class="devices mx-auto px-5">
+    <b-card title="Edit Devices" class="edit mx-auto px-5">
       <div class="row">
         <router-link to="/devices"
           ><b-icon icon="arrow-left" aria-hidden="true" class="float-left" />
           <p class="d-inline">Back to Inventory</p></router-link
         >
       </div>
-      <b-form @submit="addDevice">
+      <b-form @submit="editDevice">
         <div class="row d-flex">
           <b-form-group class="col-xs-6 col-md-6 col-lg-6 d-inline">
             <label for="device_id">Device Id</label>
@@ -70,17 +70,17 @@
           </b-form-group>
         </div>
         <div class="d-flex justify-content-center pt-3">
-          <input type="submit" class="btn btn-outline-primary" value="Create" />
+          <input type="submit" class="btn btn-outline-primary" value="Edit" />
         </div>
       </b-form>
     </b-card>
   </div>
 </template>
-<script>
-import { v4 as uuid } from 'uuid';
 
+<script>
 export default {
-  name: 'CreateDevice',
+  name: 'EditDevice',
+  props: ['device'],
   data() {
     return {
       device_id: '',
@@ -88,44 +88,60 @@ export default {
       device_type: '',
       assigned_to: '',
       assigned_by: '',
-      assignment_date: new Date(),
+      assignment_date: '',
       submission_date: '',
     };
   },
+  created() {
+    const {
+      device_id,
+      device_serial_number,
+      device_type,
+      assigned_to,
+      assigned_by,
+      assignment_date,
+      submission_date,
+      id,
+      deleted,
+    } = this.$route.params.data;
+    this.device_id = device_id;
+    this.device_serial_number = device_serial_number;
+    this.device_type = device_type;
+    this.assigned_to = assigned_to;
+    this.assigned_by = assigned_by;
+    this.id = id;
+    this.deleted = deleted;
+    this.assignment_date = [
+      assignment_date.split('-').pop(),
+      assignment_date.split('-')[0],
+      assignment_date.split('-')[1],
+    ].join('-');
+    this.submission_date = submission_date;
+  },
   methods: {
-    dateFormatter(dateObj) {
-      return new Date(dateObj)
-        .toLocaleString()
-        .split(',')[0]
-        .replace(/\//g, '-');
-    },
-    addDevice(event) {
+    editDevice(event) {
       event.preventDefault();
-      const newDevice = {
-        id: uuid(),
+      const newObj = {
         device_id: this.device_id,
         device_serial_number: this.device_serial_number,
         device_type: this.device_type,
         assigned_to: this.assigned_to,
         assigned_by: this.assigned_by,
-        assignment_date: this.dateFormatter(this.assignment_date),
+        assignment_date: this.assignment_date,
         submission_date: this.submission_date,
       };
-      this.$emit('new-device', newDevice);
-      this.device_id = '';
-      this.device_serial_number = '';
-      this.device_type = '';
-      this.assigned_to = '';
-      this.assigned_by = '';
-      this.assignment_date = '';
-      this.submission_date = '';
+      newObj.id = this.id;
+      newObj.deleted = this.deleted;
+      console.log(newObj);
+      this.$emit('edit-device', newObj);
+      this.$router.push({ name: 'DeviceListing' });
     },
   },
 };
 </script>
 
 <style scoped>
-.devices {
+.edit {
   margin-top: 2%;
   max-width: 63%;
   text-align: center;
