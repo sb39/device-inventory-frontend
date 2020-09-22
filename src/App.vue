@@ -32,7 +32,7 @@ export default {
   },
   created() {
     axios
-      .get('http://localhost:3002/devices')
+      .get('https://device-inventory.azurewebsites.net/devices')
       .then((response) => {
         this.devices = response.data;
       })
@@ -42,7 +42,7 @@ export default {
     addDevices(obj) {
       Vue.$vToastify.success('Device has been added !');
       axios
-        .post('http://localhost:3002/devices', obj)
+        .post('https://device-inventory.azurewebsites.net/devices', obj)
         .then((response) => {
           this.devices.push(response.data);
           this.$forceUpdate();
@@ -60,7 +60,10 @@ export default {
         return e;
       });
       axios
-        .patch(`http://localhost:3002/devices/${obj.id}`, obj)
+        .patch(
+          `https://device-inventory.azurewebsites.net/devices/${obj.id}`,
+          obj,
+        )
         .then(() => {
           this.devices.filter((e) => e.id === obj.id)[0] = obj;
           Vue.$vToastify.success('Device has been updated !');
@@ -79,7 +82,7 @@ export default {
         return e;
       });
       axios
-        .delete(`http://localhost:3002/devices/${id}`)
+        .delete(`https://device-inventory.azurewebsites.net/devices/${id}`)
         .then(() => {
           Vue.$vToastify.success('Device has been deleted !');
         })
